@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Expense</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    /* style.css */
+    body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: #1e293b;
+    }
+
+    .container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .main-title {
+    color: #b91c1c; /* Red for expense context */
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    }
+
+    .form-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    }
+
+    .form-card label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: -0.5rem;
+    }
+
+    .form-card select,
+    .form-card input[type="date"],
+    .form-card input[type="number"] {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+    }
+
+    .form-card select:focus,
+    .form-card input[type="date"]:focus,
+    .form-card input[type="number"]:focus {
+    border-color: #b91c1c;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+    background-color: white;
+    }
+
+    .form-card select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 1em;
+    }
+
+    .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.8rem;
+    background-color: #b91c1c;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1rem;
+    }
+
+    .nav-button:hover {
+    background-color: #991b1b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(185, 28, 28, 0.2);
+    }
+
+    .nav-button[type="submit"] {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .main-title {
+        font-size: 1.8rem;
+    }
+    }
+
+    /* Animation for form focus */
+    @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0.2); }
+    70% { box-shadow: 0 0 0 10px rgba(185, 28, 28, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0); }
+    }
+
+    .form-card input[type="number"]:focus {
+    animation: pulse 1.5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="main-title">💸 Add Store Expense</h1>
+    <form action="{{ url_for('add_expense') }}" method="POST" class="form-card">
+      <label>Main ID:</label>
+      <select name="main_id" required>
+        {% for m in main_ids %}
+          <option value="{{ m.main_id }}">{{ m.main_id }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Date:</label>
+      <input type="date" name="expense_date" required>
+
+      <label>Expense Amount:</label>
+      <input type="number" step="0.01" name="expenses" required>
+
+      <button type="submit" class="nav-button">Submit</button>
+    </form>
+
+    <a href="{{ url_for('index') }}" class="nav-button" style="margin-top: 1rem;">⬅ Back to Home</a>
+  </div>
+</body>
+</html>

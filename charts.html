@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graphs - Cash Tally</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+        .chart-title {
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body class="p-4">
+<div class="container">
+    <h2 class="mb-4">📊 Analytics Dashboard</h2>
+    
+    <div class="chart-container">
+        <h5 class="chart-title">Sales Trend</h5>
+        <canvas id="salesChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <h5 class="chart-title">Expenses Over Time</h5>
+        <canvas id="expenseChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <h5 class="chart-title">Bank Deposits Overview</h5>
+        <canvas id="depositChart"></canvas>
+    </div>
+    
+    <a href="/" class="btn btn-dark mt-4">⬅ Back to Home</a>
+</div>
+
+<script>
+// Parse the charts data
+const chartsData = JSON.parse('{{ charts | safe }}');
+
+// Sales Trend Line Chart
+const salesCtx = document.getElementById('salesChart').getContext('2d');
+new Chart(salesCtx, {
+    type: 'line',
+    data: {
+        labels: chartsData.sales.labels,
+        datasets: [{
+            label: 'Total Sales',
+            data: chartsData.sales.data,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: false,
+                title: {
+                    display: true,
+                    text: 'Amount (INR.)'
+                }
+            }
+        }
+    }
+});
+
+// Expenses Bar Chart
+const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+new Chart(expenseCtx, {
+    type: 'bar',
+    data: {
+        labels: chartsData.expenses.labels,
+        datasets: [{
+            label: 'Expenses',
+            data: chartsData.expenses.data,
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Amount (INR.)'
+                }
+            }
+        }
+    }
+});
+
+// Deposits Pie Chart
+const depositCtx = document.getElementById('depositChart').getContext('2d');
+new Chart(depositCtx, {
+    type: 'pie',
+    data: {
+        labels: chartsData.deposits.labels,
+        datasets: [{
+            label: 'Deposits',
+            data: chartsData.deposits.data,
+            backgroundColor: [
+                '#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#42f5aa',
+                '#f542e3', '#f58d42', '#42b3f5'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'right'
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>

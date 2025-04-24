@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Transaction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+        /* style.css */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #2d3748;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      padding: 2.5rem;
+      margin: 2rem;
+    }
+
+    .main-title {
+      color: #1e40af;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-card label {
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: -0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .form-card input[type="date"],
+    .form-card input[type="number"] {
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-card input[type="date"]:focus,
+    .form-card input[type="number"]:focus {
+      border-color: #1e40af;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+      background-color: white;
+    }
+
+    /* Currency symbol styling */
+    .form-card input[type="number"] {
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .form-card input[type="number"]::before {
+      content: "$";
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #4a5568;
+      font-weight: bold;
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 1.8rem;
+      background-color: #1e40af;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .nav-button:hover {
+      background-color: #153588;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    /* Back button specific styling */
+    a.nav-button {
+      background-color: #4a5568;
+      margin-top: 1.5rem;
+    }
+
+    a.nav-button:hover {
+      background-color: #2d3748;
+    }
+
+    /* Animation for form focus */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .form-card input:focus {
+      animation: float 2s ease-in-out infinite;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+      
+      .main-title {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="main-title">➕ Add Daily Transaction</h1>
+    <form action="{{ url_for('add_transaction') }}" method="POST" class="form-card">
+      <label>Date:</label>
+      <input type="date" name="transaction_date" required>
+
+      <label>Online Sales:</label>
+      <input type="number" step="0.01" name="online_sales" required>
+
+      <label>Credit Card:</label>
+      <input type="number" step="0.01" name="credit_card" required>
+
+      <label>Cheque:</label>
+      <input type="number" step="0.01" name="cheque" required>
+
+      <label>GPay:</label>
+      <input type="number" step="0.01" name="gpay" required>
+
+      <button type="submit" class="nav-button">Submit</button>
+    </form>
+
+    <a href="{{ url_for('index') }}" class="nav-button" style="margin-top: 1rem;">⬅ Back to Home</a>
+  </div>
+</body>
+</html>

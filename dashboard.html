@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_v2.css') }}">
+  <style>
+    /* style_v2.css */
+    body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+    }
+
+    .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .main-title {
+    color: #1e40af;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    }
+
+    h2 {
+    color: #1e40af;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    }
+
+    .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9em;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    }
+
+    .styled-table thead tr {
+    background-color: #1e40af;
+    color: white;
+    text-align: left;
+    font-weight: 600;
+    }
+
+    .styled-table th,
+    .styled-table td {
+    padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    }
+
+    .styled-table tbody tr:nth-of-type(even) {
+    background-color: #f8fafc;
+    }
+
+    .styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #1e40af;
+    }
+
+    .styled-table tbody tr:hover {
+    background-color: #f1f5f9;
+    cursor: pointer;
+    }
+
+    /* Highlight important numbers */
+    .styled-table td:nth-child(n+3):not(:last-child) {
+    color: #065f46; /* Green for income */
+    font-weight: 500;
+    }
+
+    .styled-table td:last-child {
+    font-weight: 700;
+    color: #1e40af;
+    }
+
+    /* Expenses table specific styling */
+    .styled-table:has(th:contains("Expenses")) td:nth-child(4) {
+    color: #b91c1c; /* Red for expenses */
+    }
+
+    /* Deposits table specific styling */
+    .styled-table:has(th:contains("Amount")) td:nth-child(4) {
+    color: #065f46; /* Green for deposits */
+    }
+
+    .nav-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #1e40af;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    }
+
+    .nav-button:hover {
+    background-color: #1e3a8a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.3);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .styled-table {
+        display: block;
+        overflow-x: auto;
+    }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="main-title">📊 Dashboard Overview</h1>
+
+    <h2>Daily Transactions</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Date</th><th>Online Sales</th><th>Card</th><th>Cheque</th><th>GPay</th><th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td>{{ t.main_id }}</td>
+          <td>{{ t.transaction_date }}</td>
+          <td>{{ t.online_sales }}</td>
+          <td>{{ t.credit_card }}</td>
+          <td>{{ t.cheque }}</td>
+          <td>{{ t.gpay }}</td>
+          <td>{{ t.total_sales }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Store Expenses</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Main ID</th><th>Date</th><th>Expenses</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in expenses %}
+        <tr>
+          <td>{{ e.expense_id }}</td>
+          <td>{{ e.main_id }}</td>
+          <td>{{ e.expense_date }}</td>
+          <td>{{ e.expenses }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Bank Deposits</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Main ID</th><th>Date</th><th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in deposits %}
+        <tr>
+          <td>{{ d.deposit_id }}</td>
+          <td>{{ d.main_id }}</td>
+          <td>{{ d.deposit_date }}</td>
+          <td>{{ d.deposit_amount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="{{ url_for('index') }}" class="nav-button" style="margin-top: 2rem;">⬅ Back to Home</a>
+  </div>
+</body>
+</html>

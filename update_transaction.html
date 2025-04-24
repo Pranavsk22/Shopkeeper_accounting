@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Transaction</title>
+</head>
+<body>
+  <h1>Update Transaction</h1>
+  <form method="POST">
+    {% if not transaction %}
+      <label for="search_date">Enter Date (YYYY-MM-DD):</label>
+      <input type="date" name="search_date" required>
+      <button type="submit">Search</button>
+    {% else %}
+      <label>Date:</label>
+      <input type="date" name="transaction_date" value="{{ transaction.transaction_date }}" readonly><br><br>
+
+      <label>Online Sales:</label>
+      <input type="number" step="0.01" name="online_sales" value="{{ transaction.online_sales }}"><br><br>
+
+      <label>Credit Card:</label>
+      <input type="number" step="0.01" name="credit_card" value="{{ transaction.credit_card }}"><br><br>
+
+      <label>Cheque:</label>
+      <input type="number" step="0.01" name="cheque" value="{{ transaction.cheque }}"><br><br>
+
+      <label>GPay:</label>
+      <input type="number" step="0.01" name="gpay" value="{{ transaction.gpay }}"><br><br>
+
+      <button type="submit">Update Transaction</button>
+    {% endif %}
+  </form>
+  <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

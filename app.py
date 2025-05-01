@@ -243,79 +243,120 @@ def add_deposit():
             conn.close()
 
 
+# Update Transaction
 @app.route('/update_transaction', methods=['GET', 'POST'])
 def update_transaction():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    record = None
-    if request.method == 'POST':
-        if 'search' in request.form:
-            search_date = request.form['transaction_date']
-            cursor.execute("SELECT * FROM daily_transactions WHERE transaction_date = %s", (search_date,))
-            record = cursor.fetchone()
-            if not record:
-                flash('No transaction found for the given date.', 'warning')
-        elif 'update' in request.form:
-            online_sales = request.form['online_sales']
-            credit_card = request.form['credit_card']
-            cheque = request.form['cheque']
-            gpay = request.form['gpay']
-            transaction_date = request.form['transaction_date']
+    date = request.form.get('date') if request.method == 'POST' else None
+    transaction = None
+    
+    if request.method == 'POST' and 'search' in request.form and date:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM daily_transactions WHERE transaction_date = %s", (date,))
+        transaction = cursor.fetchone()
+        conn.close()
+        if not transaction:
+            flash(f"No transaction found for {date}", 'warning')
+        
+    elif request.method == 'POST' and 'update' in request.form and date:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
             cursor.execute("""
-                UPDATE daily_transactions SET
-                    online_sales=%s, credit_card=%s, cheque=%s, gpay=%s
-                WHERE transaction_date=%s
-            """, (online_sales, credit_card, cheque, gpay, transaction_date))
+                UPDATE daily_transactions 
+                SET online_sales = %s, credit_card = %s, cheque = %s, gpay = %s
+                WHERE transaction_date = %s
+                """, 
+                (request.form['online_sales'], 
+                 request.form['credit_card'],
+                 request.form['cheque'],
+                 request.form['gpay'],
+                 date))
             conn.commit()
             flash('Transaction updated successfully!', 'success')
-    return render_template('update_transaction.html', record=record)
+        except Exception as e:
+            flash(f'Error updating transaction: {str(e)}', 'danger')
+        finally:
+            conn.close()
+        return redirect(url_for('update_transaction'))
+    
+    return render_template('update_transaction.html', 
+                         transaction=transaction, 
+                         selected_date=date)
 
+# Update Expense
 @app.route('/update_expense', methods=['GET', 'POST'])
 def update_expense():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    record = None
-    if request.method == 'POST':
-        if 'search' in request.form:
-            search_date = request.form['expense_date']
-            cursor.execute("SELECT * FROM store_expenses WHERE expense_date = %s", (search_date,))
-            record = cursor.fetchone()
-            if not record:
-                flash('No expense found for the given date.', 'warning')
-        elif 'update' in request.form:
-            expense_date = request.form['expense_date']
-            expenses = request.form['expenses']
+    date = request.form.get('date') if request.method == 'POST' else None
+    expense = None
+    
+    if request.method == 'POST' and 'search' in request.form and date:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM store_expenses WHERE expense_date = %s", (date,))
+        expense = cursor.fetchone()
+        conn.close()
+        if not expense:
+            flash(f"No expense found for {date}", 'warning')
+        
+    elif request.method == 'POST' and 'update' in request.form and date:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
             cursor.execute("""
-                UPDATE store_expenses SET expenses=%s
-                WHERE expense_date=%s
-            """, (expenses, expense_date))
+                UPDATE store_expenses 
+                SET expenses = %s
+                WHERE expense_date = %s
+                """, 
+                (request.form['expenses'], date))
             conn.commit()
             flash('Expense updated successfully!', 'success')
-    return render_template('update_expense.html', record=record)
+        except Exception as e:
+            flash(f'Error updating expense: {str(e)}', 'danger')
+        finally:
+            conn.close()
+        return redirect(url_for('update_expense'))
+    
+    return render_template('update_expense.html', 
+                         expense=expense, 
+                         selected_date=date)
 
-
+# Update Deposit
 @app.route('/update_deposit', methods=['GET', 'POST'])
 def update_deposit():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    record = None
-    if request.method == 'POST':
-        if 'search' in request.form:            
-            search_date = request.form['deposit_date']
-            cursor.execute("SELECT * FROM bank_deposits WHERE deposit_date = %s", (search_date,))
-            record = cursor.fetchone()
-            if not record:
-                flash('No deposit found for the given date.', 'warning')
-        elif 'update' in request.form:
-            deposit_date = request.form['deposit_date']
-            deposit_amount = request.form['deposit_amount']
+    date = request.form.get('date') if request.method == 'POST' else None
+    deposit = None
+    
+    if request.method == 'POST' and 'search' in request.form and date:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM bank_deposits WHERE deposit_date = %s", (date,))
+        deposit = cursor.fetchone()
+        conn.close()
+        if not deposit:
+            flash(f"No deposit found for {date}", 'warning')
+        
+    elif request.method == 'POST' and 'update' in request.form and date:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
             cursor.execute("""
-                UPDATE bank_deposits SET deposit_amount=%s
-                WHERE deposit_date=%s
-            """, (deposit_amount, deposit_date))
+                UPDATE bank_deposits 
+                SET deposit_amount = %s
+                WHERE deposit_date = %s
+                """, 
+                (request.form['deposit_amount'], date))
             conn.commit()
             flash('Deposit updated successfully!', 'success')
-    return render_template('update_deposit.html', record=record)
+        except Exception as e:
+            flash(f'Error updating deposit: {str(e)}', 'danger')
+        finally:
+            conn.close()
+        return redirect(url_for('update_deposit'))
+    
+    return render_template('update_deposit.html', 
+                         deposit=deposit, 
+                         selected_date=date)
 
 
 if __name__ == '__main__':

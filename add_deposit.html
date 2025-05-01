@@ -156,13 +156,6 @@
   <div class="container">
     <h1 class="main-title">🏦 Add Bank Deposit</h1>
     <form action="{{ url_for('add_deposit') }}" method="POST" class="form-card">
-      <label>Main ID:</label>
-      <select name="main_id" required>
-        {% for m in main_ids %}
-          <option value="{{ m.main_id }}">{{ m.main_id }}</option>
-        {% endfor %}
-      </select>
-
       <label>Date:</label>
       <input type="date" name="deposit_date" required>
 

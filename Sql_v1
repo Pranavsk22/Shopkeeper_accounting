@@ -1,0 +1,46 @@
+Table 1:
+CREATE TABLE `daily_transactions` (
+  `main_id` int NOT NULL AUTO_INCREMENT,
+  `transaction_date` date NOT NULL,
+  `online_sales` decimal(10,2) DEFAULT '0.00',
+  `credit_card` decimal(10,2) DEFAULT '0.00',
+  `cheque` decimal(10,2) DEFAULT '0.00',
+  `gpay` decimal(10,2) DEFAULT '0.00',
+  `total_sales` decimal(10,2) GENERATED ALWAYS AS ((((`online_sales` + `credit_card`) + `cheque`) + `gpay`)) STORED,
+  PRIMARY KEY (`main_id`)
+
+Table 2:
+CREATE TABLE `cash_flow` (
+  `cash_id` int NOT NULL AUTO_INCREMENT,
+  `main_id` int DEFAULT NULL,
+  `cash_date` date NOT NULL,
+  `denomination_id` int NOT NULL,
+  `denomination_value` int NOT NULL,
+  `denomination_count` int NOT NULL DEFAULT '0',
+  `total_value` int GENERATED ALWAYS AS ((`denomination_value` * `denomination_count`)) STORED,
+  PRIMARY KEY (`cash_id`),
+  KEY `main_id` (`main_id`),
+  CONSTRAINT `cash_flow_ibfk_1` FOREIGN KEY (`main_id`) REFERENCES `daily_transactions` (`main_id`) ON DELETE CASCADE,
+  CONSTRAINT `cash_flow_chk_1` CHECK ((`denomination_value` in (500,200,100,50,20,10,5,2,1)))
+
+Table 3:
+CREATE TABLE `store_expenses` (
+  `expense_id` int NOT NULL AUTO_INCREMENT,
+  `main_id` int DEFAULT NULL,
+  `expense_date` date NOT NULL,
+  `expenses` decimal(10,2) DEFAULT '0.00',
+  PRIMARY KEY (`expense_id`),
+  KEY `main_id` (`main_id`),
+  CONSTRAINT `store_expenses_ibfk_1` FOREIGN KEY (`main_id`) REFERENCES `daily_transactions` (`main_id`) ON DELETE CASCADE
+)
+
+Table 4:
+CREATE TABLE `bank_deposits` (
+  `deposit_id` int NOT NULL AUTO_INCREMENT,
+  `main_id` int DEFAULT NULL,
+  `deposit_date` date NOT NULL,
+  `deposit_amount` decimal(10,2) DEFAULT '0.00',
+  PRIMARY KEY (`deposit_id`),
+  KEY `main_id` (`main_id`),
+  CONSTRAINT `bank_deposits_ibfk_1` FOREIGN KEY (`main_id`) REFERENCES `daily_transactions` (`main_id`) ON DELETE CASCADE
+)
